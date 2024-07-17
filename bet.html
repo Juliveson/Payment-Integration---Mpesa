@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors Betting Game</title>
+    <style>
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 10px;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            font-size: 100px;
+            font-weight: 70px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rock Paper Scissors Betting Game</h1>
+    <label for="betAmount">Enter Bet Amount:</label>
+    <input type="number" id="betAmount" min="1" required>
+    <div>
+        <button onclick="playGame('✊' )">✊</button>
+        <button onclick="playGame('✋')">✋</button>
+        <button onclick="playGame('✌️')">✌️</button>
+    </div>
+    <div id="result"></div>
+    <div id="payout"></div>
+    <script>
+            function getCompInput(playerChoice){
+            const bias = 0.6;
+            const rand = Math.random();
+
+            const win = {'✊': '✋', '✋': '✌️', '✌️': '✊'}
+            const lose = {'✊': '✌️', '✌️' : '✋', '✋': '✊'}
+
+            if (rand < bias){
+                return win[playerChoice]
+            }
+            else if (rand < (1 + bias)/ 2){
+                return lose[playerChoice]
+            }
+            else {
+                return playerChoice;
+            }
+        }
+
+        function getWinner(playerChoice, computerChoice){
+            if (playerChoice === computerChoice){
+                return 'DRAW';
+            }
+            if ((playerChoice === '✊' && computerChoice === '✌️') ||
+                (playerChoice === '✌️' && computerChoice === '✋') ||
+                (playerChoice === '✋' && computerChoice === '✊')){
+                    return 'You';
+                }
+            return 'Computer';
+        }
+
+        function gamePayout(winner, betAmount){
+            if (winner === 'You'){
+                return betAmount + (betAmount * 0.75);
+            }
+            return 0;
+        }
+
+        function playGame(playerChoice) {
+            const betAmount = parseFloat(document.getElementById('betAmount').value);
+            if (isNaN(betAmount) || betAmount <= 0) {
+                alert('Please enter a valid bet amount.');
+                return;
+            }
+
+            const computerChoice = getCompInput(playerChoice);
+            const winner = getWinner(playerChoice, computerChoice);
+            const payout = gamePayout(winner, betAmount);
+
+            document.getElementById('result').innerText = `You ${playerChoice}, Computer ${computerChoice}. Winner: ${winner}`;
+            document.getElementById('payout').innerText = `Payout: ${payout.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
